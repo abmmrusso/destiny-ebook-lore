@@ -22,5 +22,6 @@ setup(
 	keywords = "destiny bungie lore ebook",
 	packages = find_packages(),
 	cmdclass={"test": PyTest},
-	tests_require=[ 'pytest', 'mock'],
+	install_requires=[ 'requests' ],
+	tests_require=[ 'pytest', 'mock', 'httpretty'],
 )
