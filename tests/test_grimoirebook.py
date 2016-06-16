@@ -3,6 +3,7 @@ import mock
 import httpretty
 import json
 import grimoireebook
+import os
 from grimoireebook import DestinyContentAPIClientError
 
 __dummyGrimoireDefinition__ = {"themes": [] }
@@ -845,3 +846,68 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionYStart"] == 0
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionHeight"] == 86
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionWidth"] == 87
+
+@mock.patch('os.makedirs')
+@mock.patch('urllib.urlretrieve')
+def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedirs):
+	localImageFolder = '~/destinyGrimoire/images'
+	testGrimoireDefinition = dict()
+	testGrimoireDefinition["themes"] = []
+	testGrimoireDefinition["themes"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"] = []
+	testGrimoireDefinition["themes"][0]["pages"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"] = []
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet01_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet01_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet02_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet02_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"] = []
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet03_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet03_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet04_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet04_High.jpg"
+	testGrimoireDefinition["themes"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"] = []
+	testGrimoireDefinition["themes"][1]["pages"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"] = []
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet05_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet05_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet06_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet06_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"] = []
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet07_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet07_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet08_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet08_High.jpg"
+
+	grimoireebook.dowloadGrimoireImages(testGrimoireDefinition, localImageFolder);
+
+	mock_makedirs.assert_called_once_with(localImageFolder)
+	assert mock_urllib.call_count == 8
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet01_High.jpg", os.path.join(localImageFolder, "cardSet01_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet02_High.jpg", os.path.join(localImageFolder, "cardSet02_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet03_High.jpg", os.path.join(localImageFolder, "cardSet03_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet04_High.jpg", os.path.join(localImageFolder, "cardSet04_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet05_High.jpg", os.path.join(localImageFolder, "cardSet05_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet06_High.jpg", os.path.join(localImageFolder, "cardSet06_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet07_High.jpg", os.path.join(localImageFolder, "cardSet07_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet08_High.jpg", os.path.join(localImageFolder, "cardSet08_High.jpg"))
+

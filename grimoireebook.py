@@ -1,5 +1,10 @@
 import requests
 import urlparse
+import jsonpath_rw
+import urllib
+import urllib2
+import os
+from sets import Set
 
 def generateGrimoireEbook(apiKey):
 	createGrimoireEpub(loadDestinyGrimoireDefinition(apiKey))
@@ -36,6 +41,16 @@ def getDestinyGrimoireDefinitionFromJson(grimoireJson):
 		grimoireDefinition["themes"].append(themeToAdd)
 		
 	return grimoireDefinition
+
+def dowloadGrimoireImages(grimoireDefinition, localImageFolder):
+	jsonpath_expr = jsonpath_rw.parse('themes[*].pages[*].cards[*].image')
+
+	imagesToDownload = Set([match.value for match in jsonpath_expr.find(grimoireDefinition)])
+
+	os.makedirs(localImageFolder)
+
+	for imageURL in imagesToDownload:
+		urllib.urlretrieve(imageURL, os.path.join(localImageFolder, urlparse.urlsplit(imageURL).path.split('/')[-1]))
 
 class DestinyContentAPIClientError(Exception):
 	NO_API_KEY_PROVIDED_ERROR_MSG = "No API key provided. One is required to refresh the content cache."
