@@ -4,6 +4,7 @@ import httpretty
 import json
 import grimoireebook
 import os
+from PIL import Image
 from grimoireebook import DestinyContentAPIClientError
 
 __dummyGrimoireDefinition__ = {"themes": [] }
@@ -910,4 +911,24 @@ def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedir
 	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet06_High.jpg", os.path.join(localImageFolder, "cardSet06_High.jpg"))
 	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet07_High.jpg", os.path.join(localImageFolder, "cardSet07_High.jpg"))
 	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet08_High.jpg", os.path.join(localImageFolder, "cardSet08_High.jpg"))
+
+@mock.patch('grimoireebook.Image.open')
+@mock.patch('grimoireebook.Image')
+@mock.patch('grimoireebook.Image')
+def test_shouldGenerateCardImageFromGivenSheet(mock_sheetImage, mock_cardImage, mock_imageOpen):
+	localImageFolder = '~/destinyGrimoire/images'
+	mock_imageOpen.return_value = mock_sheetImage
+	mock_sheetImage.crop.return_value = mock_cardImage
+
+	sheetImagePath = '/home/me/sheet.jpg'
+	cardName = 'test'
+	dimensions_tuple = (1,2,3,4)
+	expectedGeneratedImagePath = os.path.join(localImageFolder, 'test.jpg')
+
+	generatedImagePath = grimoireebook.generateCardImageFromImageSheet(cardName, sheetImagePath, localImageFolder, dimensions_tuple)
+
+	assert generatedImagePath == expectedGeneratedImagePath
+	mock_imageOpen.assert_called_once_with(sheetImagePath)
+	mock_sheetImage.crop.assert_called_once_with((dimensions_tuple[0], dimensions_tuple[1], dimensions_tuple[0] + dimensions_tuple[2], dimensions_tuple[1] + dimensions_tuple[3]))
+	mock_cardImage.save.assert_called_once_with(expectedGeneratedImagePath, optimize=True)
 

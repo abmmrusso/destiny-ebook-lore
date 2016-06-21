@@ -4,6 +4,7 @@ import jsonpath_rw
 import urllib
 import urllib2
 import os
+from PIL import Image
 from sets import Set
 
 def generateGrimoireEbook(apiKey):
@@ -51,6 +52,16 @@ def dowloadGrimoireImages(grimoireDefinition, localImageFolder):
 
 	for imageURL in imagesToDownload:
 		urllib.urlretrieve(imageURL, os.path.join(localImageFolder, urlparse.urlsplit(imageURL).path.split('/')[-1]))
+
+def generateCardImageFromImageSheet(cardName, sheetImagePath, localImageFolder, dimensions_tuple):
+	generatedImagePath = os.path.join(localImageFolder, '%s%s' % (cardName, os.path.splitext(sheetImagePath)[1]))
+
+	sheetImage = Image.open(sheetImagePath)
+	print (sheetImage)
+	cardImage = sheetImage.crop((dimensions_tuple[0], dimensions_tuple[1], dimensions_tuple[0] + dimensions_tuple[2], dimensions_tuple[1] + dimensions_tuple[3]))
+	cardImage.save(generatedImagePath, optimize=True)
+
+	return generatedImagePath
 
 class DestinyContentAPIClientError(Exception):
 	NO_API_KEY_PROVIDED_ERROR_MSG = "No API key provided. One is required to refresh the content cache."
