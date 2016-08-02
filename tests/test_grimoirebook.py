@@ -4,8 +4,10 @@ import httpretty
 import json
 import grimoireebook
 import os
+import string
 from PIL import Image
 from grimoireebook import DestinyContentAPIClientError
+from ebooklib import epub
 
 __dummyGrimoireDefinition__ = {"themes": [] }
 __testApiKey__ = 'testApiKey'
@@ -932,3 +934,92 @@ def test_shouldGenerateCardImageFromGivenSheet(mock_sheetImage, mock_cardImage, 
 	mock_sheetImage.crop.assert_called_once_with((dimensions_tuple[0], dimensions_tuple[1], dimensions_tuple[0] + dimensions_tuple[2], dimensions_tuple[1] + dimensions_tuple[3]))
 	mock_cardImage.save.assert_called_once_with(expectedGeneratedImagePath, optimize=True)
 
+def test_shouldGenerateGrimoirePageContent():
+	pageData = {'cardName': 'NameText',
+					'cardIntro': 'IntroText',
+					'cardDescription': 'DescriptionText',
+					'image': {
+						'sourceImage': 'http://www.bungie.net/images/cardSet.jpg',
+						'regionXStart': 0,
+						'regionYStart': 0,
+						'regionHeight': 30,
+						'regionWidth': 31
+					}
+				}
+	pageImagePath = os.path.join("images", "NameText_img.jpg")
+
+	expectedContent = u'''<cardname">%s</cardname>
+						  <cardintro>%s</cardintro>
+						  <container>
+							<cardimage><img src="%s"/></cardimage>
+							<carddescription">%s</carddescription>
+						  </container>''' % ( 'NameText', 'IntroText', pageImagePath, 'DescriptionText')
+
+	pageContent = grimoireebook.generateGrimoirePageContent(pageData, pageImagePath)
+
+	assert pageContent.encode('ascii', 'replace').translate(None, string.whitespace) == expectedContent.encode('ascii', 'replace').translate(None, string.whitespace)
+
+@mock.patch('grimoireebook.generateCardImageFromImageSheet')
+def test_shouldGenerateEpubImageItem(mock_card_image_gen):
+	testImageData = 'DummyPictureData'
+
+	with mock.patch('grimoireebook.open', mock.mock_open(read_data=testImageData)):
+		cardName = "test"
+		cardImageBaseName = '%s_img' % (cardName)
+		cardImageFolder = "images"
+		generatedCardImagePath = "%s/%s.jpg" % (cardImageFolder, cardImageBaseName)
+		sheetImagePath = "images/cardSet.jpg"
+		cardImageData = {
+							'sourceImage': 'http://www.bungie.net/images/cardSet.jpg',
+							'regionXStart': 0,
+							'regionYStart': 0,
+							'regionHeight': 30,
+							'regionWidth': 31
+						}
+
+		mock_card_image_gen.return_value = generatedCardImagePath
+
+		epubImageItem = grimoireebook.generateGrimoirePageImage(cardName, cardImageData, cardImageFolder)
+
+		assert epubImageItem.id == cardImageBaseName
+		assert epubImageItem.file_name == generatedCardImagePath
+		assert epubImageItem.content == testImageData
+
+		mock_card_image_gen.assert_called_with(cardImageBaseName, sheetImagePath, cardImageFolder, (0,0,31,30))
+
+@mock.patch('grimoireebook.generateGrimoirePageImage')
+def test_shouldCreateGrimoireEbookPage(mock_generate_grimoire_page_image):
+	cardName = "NameText"
+	cardImage = "%s_img.jpg" % (cardName)
+	cardImagePath = os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, cardImage)
+
+	pageData = {
+					'cardName': cardName,
+					'cardIntro': 'IntroText',
+					'cardDescription': 'DescriptionText',
+					'image': {
+						'sourceImage': 'http://www.bungie.net/images/cardSet.jpg',
+						'regionXStart': 0,
+						'regionYStart': 0,
+						'regionHeight': 30,
+						'regionWidth': 31
+					}
+				}
+	default_css = epub.EpubItem(uid="page_style", file_name="style/page.css", media_type="text/css", content=grimoireebook.DEFAULT_PAGE_STYLE)
+
+	mock_grimoire_page_image = mock.Mock()
+	mock_grimoire_page_image.file_name= "%s/%s" % (grimoireebook.DEFAULT_IMAGE_FOLDER, cardImage)
+	mock_generate_grimoire_page_image.return_value = mock_grimoire_page_image
+
+	createdPageItems = grimoireebook.createGrimoirePage(pageData, default_css)
+
+	assert createdPageItems.page.title == cardName
+	assert createdPageItems.page.file_name == '%s.xhtml' % (cardName)
+	assert createdPageItems.page.lang == 'en'
+	assert createdPageItems.page.content == grimoireebook.generateGrimoirePageContent(pageData, cardImagePath)
+	assert createdPageItems.image == mock_grimoire_page_image
+
+	mock_generate_grimoire_page_image.assert_called_with(cardName, pageData['image'], grimoireebook.DEFAULT_IMAGE_FOLDER)
+
+	pageStyle = createdPageItems.page.get_links_of_type("text/css").next()
+	assert pageStyle['href'] == 'style/page.css'

@@ -4,8 +4,35 @@ import jsonpath_rw
 import urllib
 import urllib2
 import os
+import collections
 from PIL import Image
 from sets import Set
+from ebooklib import epub
+
+DEFAULT_PAGE_STYLE = '''
+	cardname {
+		display: block;
+		text-align: center;
+		font-size:150%;
+	}
+	cardimage {
+		float: left;
+		margin-right: 5%;
+		width: 40%;
+		height: 40%;
+	}
+	cardintro {
+		display: block;
+		padding: 5%;
+	}
+	carddescription {}
+	container {
+		width: 100%;
+		clear: both;
+	}
+'''
+
+DEFAULT_IMAGE_FOLDER = 'images'
 
 def generateGrimoireEbook(apiKey):
 	createGrimoireEpub(loadDestinyGrimoireDefinition(apiKey))
@@ -62,6 +89,26 @@ def generateCardImageFromImageSheet(cardName, sheetImagePath, localImageFolder, 
 	cardImage.save(generatedImagePath, optimize=True)
 
 	return generatedImagePath
+
+def generateGrimoirePageContent(pageData, pageImagePath):
+	return u'''<cardname">%s</cardname>
+			   <cardintro>%s</cardintro>
+			   <container>
+				<cardimage><img src="%s"/></cardimage>
+				<carddescription">%s</carddescription>
+			   </container>''' % ( pageData["cardName"], pageData["cardIntro"], pageImagePath, pageData["cardDescription"] )
+
+def generateGrimoirePageImage(imageName, imageData, imagesFolder):
+	imageBaseFileName = '%s_img' % (imageName)
+	imagePath = generateCardImageFromImageSheet(imageBaseFileName, os.path.join(imagesFolder, os.path.basename(imageData["sourceImage"])),imagesFolder, (imageData["regionXStart"], imageData["regionYStart"], imageData["regionWidth"], imageData["regionHeight"]))
+	return epub.EpubItem(uid=imageBaseFileName, file_name=imagePath, content=open(imagePath, 'rb').read())
+
+def createGrimoirePage(pageData, pageCSS):
+	bookPage = epub.EpubHtml(title=pageData["cardName"], file_name='%s.%s' % (pageData["cardName"], 'xhtml'), lang='en', content="")
+	bookPage.add_item(pageCSS)
+	pageImage = generateGrimoirePageImage(pageData["cardName"], pageData["image"], DEFAULT_IMAGE_FOLDER)
+	bookPage.content = generateGrimoirePageContent(pageData, pageImage.file_name)
+	return collections.namedtuple('GrimoirePage', ['page', 'image'])(page=bookPage, image=pageImage)
 
 class DestinyContentAPIClientError(Exception):
 	NO_API_KEY_PROVIDED_ERROR_MSG = "No API key provided. One is required to refresh the content cache."
