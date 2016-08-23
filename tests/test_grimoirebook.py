@@ -993,7 +993,7 @@ def test_shouldCreateGrimoireEbookPage(mock_generate_grimoire_page_image):
 	cardImage = "%s_img.jpg" % (cardName)
 	cardImagePath = os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, cardImage)
 
-	pageData = {
+	cardData = {
 					'cardName': cardName,
 					'cardIntro': 'IntroText',
 					'cardDescription': 'DescriptionText',
@@ -1011,15 +1011,34 @@ def test_shouldCreateGrimoireEbookPage(mock_generate_grimoire_page_image):
 	mock_grimoire_page_image.file_name= "%s/%s" % (grimoireebook.DEFAULT_IMAGE_FOLDER, cardImage)
 	mock_generate_grimoire_page_image.return_value = mock_grimoire_page_image
 
-	createdPageItems = grimoireebook.createGrimoirePage(pageData, default_css)
+	createdPageItems = grimoireebook.createGrimoireCardPage(cardData, default_css)
 
 	assert createdPageItems.page.title == cardName
 	assert createdPageItems.page.file_name == '%s.xhtml' % (cardName)
 	assert createdPageItems.page.lang == 'en'
-	assert createdPageItems.page.content == grimoireebook.generateGrimoirePageContent(pageData, cardImagePath)
+	assert createdPageItems.page.content == grimoireebook.generateGrimoirePageContent(cardData, cardImagePath)
 	assert createdPageItems.image == mock_grimoire_page_image
 
-	mock_generate_grimoire_page_image.assert_called_with(cardName, pageData['image'], grimoireebook.DEFAULT_IMAGE_FOLDER)
+	mock_generate_grimoire_page_image.assert_called_with(cardName, cardData['image'], grimoireebook.DEFAULT_IMAGE_FOLDER)
 
 	pageStyle = createdPageItems.page.get_links_of_type("text/css").next()
 	assert pageStyle['href'] == 'style/page.css'
+
+@mock.patch('ebooklib.epub.EpubBook')
+@mock.patch('grimoireebook.createGrimoireCardPage')
+def test_shouldAddPageCardsToGrimoireEbook(mock_createGrimoireCardPage, mock_ebook):
+	firstCardPage = mock.Mock()
+	secondCardPage = mock.Mock();
+
+	mock_createGrimoireCardPage.side_effect = [ firstCardPage, secondCardPage ];
+
+	pageData = {
+					'cards' : [ 'card1', 'card2' ]
+				}
+
+	pageCards = grimoireebook.addPageItemsToEbook(mock_ebook, pageData)
+
+	assert pageCards == (firstCardPage, secondCardPage)
+	mock_createGrimoireCardPage.assert_has_calls([mock.call('card1', grimoireebook.DEFAULT_PAGE_STYLE), mock.call('card2', grimoireebook.DEFAULT_PAGE_STYLE)])
+	mock_ebook.add_item.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])
+	mock_ebook.spine.append.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])

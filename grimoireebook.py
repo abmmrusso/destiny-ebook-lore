@@ -103,12 +103,21 @@ def generateGrimoirePageImage(imageName, imageData, imagesFolder):
 	imagePath = generateCardImageFromImageSheet(imageBaseFileName, os.path.join(imagesFolder, os.path.basename(imageData["sourceImage"])),imagesFolder, (imageData["regionXStart"], imageData["regionYStart"], imageData["regionWidth"], imageData["regionHeight"]))
 	return epub.EpubItem(uid=imageBaseFileName, file_name=imagePath, content=open(imagePath, 'rb').read())
 
-def createGrimoirePage(pageData, pageCSS):
+def createGrimoireCardPage(pageData, pageCSS):
 	bookPage = epub.EpubHtml(title=pageData["cardName"], file_name='%s.%s' % (pageData["cardName"], 'xhtml'), lang='en', content="")
 	bookPage.add_item(pageCSS)
 	pageImage = generateGrimoirePageImage(pageData["cardName"], pageData["image"], DEFAULT_IMAGE_FOLDER)
 	bookPage.content = generateGrimoirePageContent(pageData, pageImage.file_name)
 	return collections.namedtuple('GrimoirePage', ['page', 'image'])(page=bookPage, image=pageImage)
+
+def addPageItemsToEbook(ebook, pageData):
+	pageCards = ()
+	for cardData in pageData['cards']:
+		cardPage = createGrimoireCardPage(cardData, DEFAULT_PAGE_STYLE)
+		ebook.add_item(cardPage)
+		ebook.spine.append(cardPage)
+		pageCards = pageCards + (cardPage,)
+	return pageCards
 
 class DestinyContentAPIClientError(Exception):
 	NO_API_KEY_PROVIDED_ERROR_MSG = "No API key provided. One is required to refresh the content cache."
