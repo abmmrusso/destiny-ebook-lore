@@ -119,6 +119,13 @@ def addPageItemsToEbook(ebook, pageData):
 		pageCards = pageCards + (cardPage,)
 	return pageCards
 
+def addThemePagesToEbook(ebook, themeData):
+	themePages = ()
+	for pageData in themeData['pages']:
+		themePages = themePages + ((pageData['pageName'], addPageItemsToEbook(ebook, pageData)),)
+	print str(themePages)
+	return themePages
+
 class DestinyContentAPIClientError(Exception):
 	NO_API_KEY_PROVIDED_ERROR_MSG = "No API key provided. One is required to refresh the content cache."
 

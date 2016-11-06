@@ -1028,9 +1028,9 @@ def test_shouldCreateGrimoireEbookPage(mock_generate_grimoire_page_image):
 @mock.patch('grimoireebook.createGrimoireCardPage')
 def test_shouldAddPageCardsToGrimoireEbook(mock_createGrimoireCardPage, mock_ebook):
 	firstCardPage = mock.Mock()
-	secondCardPage = mock.Mock();
+	secondCardPage = mock.Mock()
 
-	mock_createGrimoireCardPage.side_effect = [ firstCardPage, secondCardPage ];
+	mock_createGrimoireCardPage.side_effect = [ firstCardPage, secondCardPage ]
 
 	pageData = {
 					'cards' : [ 'card1', 'card2' ]
@@ -1042,3 +1042,24 @@ def test_shouldAddPageCardsToGrimoireEbook(mock_createGrimoireCardPage, mock_ebo
 	mock_createGrimoireCardPage.assert_has_calls([mock.call('card1', grimoireebook.DEFAULT_PAGE_STYLE), mock.call('card2', grimoireebook.DEFAULT_PAGE_STYLE)])
 	mock_ebook.add_item.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])
 	mock_ebook.spine.append.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])
+
+@mock.patch('ebooklib.epub.EpubBook')
+@mock.patch('grimoireebook.addPageItemsToEbook')
+def test_shouldAddThemePagesToGrimoireEbook(mock_addPageItemsToEbook, mock_ebook):
+	firstPageSet = ('firstPageSet',)
+	secondPageSet = ('secondPageSet',)
+
+	mock_addPageItemsToEbook.side_effect = [firstPageSet, secondPageSet]
+
+	firstPage = {'pageName' : 'page1'}
+	secondPage = {'pageName': 'page2'}
+
+	themeData = {
+					'themeName' : 'testTheme',
+					'pages' : [ firstPage, secondPage ]
+				}
+
+	themePages = grimoireebook.addThemePagesToEbook(mock_ebook, themeData)
+
+	assert themePages == ((firstPage['pageName'], firstPageSet), (secondPage['pageName'], secondPageSet))
+	mock_addPageItemsToEbook.assert_has_calls([mock.call(mock_ebook, firstPage), mock.call(mock_ebook, secondPage)])
