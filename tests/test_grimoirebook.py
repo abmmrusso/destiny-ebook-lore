@@ -1063,3 +1063,23 @@ def test_shouldAddThemePagesToGrimoireEbook(mock_addPageItemsToEbook, mock_ebook
 
 	assert themePages == ((firstPage['pageName'], firstPageSet), (secondPage['pageName'], secondPageSet))
 	mock_addPageItemsToEbook.assert_has_calls([mock.call(mock_ebook, firstPage), mock.call(mock_ebook, secondPage)])
+
+@mock.patch('ebooklib.epub.EpubBook')
+@mock.patch('grimoireebook.addThemePagesToEbook')
+def test_shouldAddThemesToGrimoireBook(mock_addThemePagesToEbook, mock_ebook):
+	firstThemeSet = ('firstThemeSet',)
+	secondThemeSet = ('secondThemeSet',)
+
+	mock_addThemePagesToEbook.side_effect = [firstThemeSet, secondThemeSet]
+
+	firstTheme = { 'themeName' : 'theme_1'}
+	secondTheme = { 'themeName' : 'theme_2'}
+
+	grimoireData = {
+						'themes' : [ firstTheme, secondTheme]
+					}
+
+	themeSets = grimoireebook.addThemeSetsToEbook(mock_ebook, grimoireData)
+
+	assert themeSets == ((firstTheme['themeName'], firstThemeSet), (secondTheme['themeName'], secondThemeSet))
+	mock_addThemePagesToEbook.assert_has_calls([mock.call(mock_ebook, firstTheme), mock.call(mock_ebook, secondTheme)])
