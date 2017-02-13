@@ -40,8 +40,19 @@ def generateGrimoireEbook(apiKey):
 def loadDestinyGrimoireDefinition(apiKey):
 	return getDestinyGrimoireDefinitionFromJson(getDestinyGrimoireFromBungie(apiKey))
 
-def createGrimoireEpub(destinyGrimoireDefinition):
-	return
+def createGrimoireEpub(destinyGrimoireDefinition, book=epub.EpubBook()):
+	book.set_identifier('destinyGrimoire')
+	book.set_title('Destiny Grimoire')
+	book.set_language('en')
+	book.add_author('Bungie')
+	book.set_cover("cover.jpg", open('resources/cover.jpg', 'rb').read())
+
+	book.add_item(epub.EpubItem(uid="style_default", file_name="style/default.css", media_type="text/css", content=DEFAULT_PAGE_STYLE))
+
+	addThemeSetsToEbook(book, destinyGrimoireDefinition)
+
+	book.add_item(epub.EpubNcx())
+	book.add_item(epub.EpubNav())
 
 def getDestinyGrimoireFromBungie(apiKey):
 	if apiKey is None or not apiKey:

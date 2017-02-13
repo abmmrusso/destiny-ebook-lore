@@ -8,6 +8,7 @@ import string
 from PIL import Image
 from grimoireebook import DestinyContentAPIClientError
 from ebooklib import epub
+from mock import call
 
 __dummyGrimoireDefinition__ = {"themes": [] }
 __testApiKey__ = 'testApiKey'
@@ -1083,3 +1084,36 @@ def test_shouldAddThemesToGrimoireBook(mock_addThemePagesToEbook, mock_ebook):
 
 	assert themeSets == ((firstTheme['themeName'], firstThemeSet), (secondTheme['themeName'], secondThemeSet))
 	mock_addThemePagesToEbook.assert_has_calls([mock.call(mock_ebook, firstTheme), mock.call(mock_ebook, secondTheme)])
+
+@mock.patch('ebooklib.epub.EpubBook')
+@mock.patch('grimoireebook.addThemeSetsToEbook')
+def test_shouldCreateGrimoireEpub(mock_addThemeSetsToEbook, mock_ebook):
+	grimoireDefinition = {}
+	mock_addThemeSetsToEbook.return_value = ()
+
+	with mock.patch('grimoireebook.open', mock.mock_open(read_data="dummyCoverImageData")):
+		grimoireebook.createGrimoireEpub(grimoireDefinition, mock_ebook)
+
+		mock_ebook.set_identifier.assert_called_with('destinyGrimoire')
+		mock_ebook.set_title.assert_called_with('Destiny Grimoire')
+		mock_ebook.set_language.assert_called_with('en')
+		mock_ebook.add_author.assert_called_with('Bungie')
+		mock_ebook.set_cover.assert_called_with('cover.jpg', "dummyCoverImageData")
+
+		mock_addThemeSetsToEbook.assert_called_once_with(mock_ebook, grimoireDefinition);
+
+		mock_ebook.add_item.assert_has_calls([call(BookStyleItemMatcher()), call(ItemTypeMatcher(epub.EpubNcx)), call(ItemTypeMatcher(epub.EpubNav))], any_order=True)
+
+class BookStyleItemMatcher:
+	def __eq__(self, other):
+		return other.id == 'style_default' and other.file_name == 'style/default.css' and other.media_type == 'text/css' and other.content == grimoireebook.DEFAULT_PAGE_STYLE
+
+class ItemTypeMatcher:
+	def __init__(self, expectedType):
+		self.expectedType = expectedType
+
+	def __eq__(self, arg):
+		return type(arg) is self.expectedType
+
+	def __repr__(self):
+		return 'Item Type Matcher for %s' % self.expectedType
