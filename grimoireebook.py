@@ -5,6 +5,8 @@ import urllib
 import urllib2
 import os
 import collections
+import sys
+import logging
 from PIL import Image
 from sets import Set
 from ebooklib import epub
@@ -55,11 +57,13 @@ def createGrimoireEpub(destinyGrimoireDefinition, book=epub.EpubBook()):
 	book.add_item(epub.EpubNav())
 
 def getDestinyGrimoireFromBungie(apiKey):
+	logging.debug('Dowloading Destiny Grimoire from Bungie')
 	if apiKey is None or not apiKey:
 			raise DestinyContentAPIClientError(DestinyContentAPIClientError.NO_API_KEY_PROVIDED_ERROR_MSG)
 	return requests.get('http://www.bungie.net/Platform/Destiny/Vanguard/Grimoire/Definition/', headers={'X-API-Key': apiKey}).json()
 
 def getDestinyGrimoireDefinitionFromJson(grimoireJson):
+	logging.debug('Extracting grimoire definitions from raw JSON: %s' % grimoireJson)
 	grimoireDefinition = { "themes" : []}
 
 	for theme in grimoireJson["Response"]["themeCollection"]:
@@ -67,6 +71,7 @@ def getDestinyGrimoireDefinitionFromJson(grimoireJson):
 		for page in theme["pageCollection"]:
 			pageToAdd = { "pageName" : page["pageName"], "cards" : [] }
 			for card in page["cardCollection"]:
+				logging.debug('Processing grimoire card: %s' % card)
 				pageToAdd["cards"].append(
 					{ "cardName" : card["cardName"], 
 					"cardIntro" : card["cardIntro"], 
@@ -150,3 +155,7 @@ class DestinyContentAPIClientError(Exception):
 
 	def __str__(self):
 		return self.value
+
+if __name__ == "__main__":
+	logging.basicConfig(level=logging.DEBUG)
+	generateGrimoireEbook(sys.argv[1])
