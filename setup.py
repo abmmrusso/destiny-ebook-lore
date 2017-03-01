@@ -24,4 +24,7 @@ setup(
 	cmdclass={"test": PyTest},
 	install_requires=[ 'requests', 'jsonpath-rw', 'Pillow', 'ebooklib'],
 	tests_require=[ 'pytest', 'mock', 'httpretty'],
+	package_data={
+		'': ['*.jpg']
+	}
 )
