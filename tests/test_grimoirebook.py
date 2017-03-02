@@ -784,6 +784,219 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 		            ]
 		          }
 		        ]
+		      },
+		      {
+		        "themeId": "3",
+		        "themeName": "weird_cases_theme",
+		        "normalResolution": {
+		          "image": {
+		            "rect": {
+		              "x": 64,
+		              "y": 65,
+		              "height": 66,
+		              "width": 67
+		            },
+		            "sheetPath": "images/weirdCasesSet01_Normal.jpg",
+		            "sheetSize": {
+		              "x": 0,
+		              "y": 0,
+		              "height": 156,
+		              "width": 157
+		            }
+		          },
+		          "smallImage": {
+		            "rect": {
+		              "x": 66,
+		              "y": 67,
+		              "height": 68,
+		              "width": 69
+		            },
+		            "sheetPath": "images/weirdCasesSet01_NormalSmall.jpg",
+		            "sheetSize": {
+		              "x": 0,
+		              "y": 0,
+		              "height": 158,
+		              "width": 159
+		            }
+		          }
+		        },
+		        "highResolution": {
+		          "image": {
+		            "rect": {
+		              "x": 68,
+		              "y": 69,
+		              "height": 70,
+		              "width": 71
+		            },
+		            "sheetPath": "images/weirdCasesSet01_High.jpg",
+		            "sheetSize": {
+		              "x": 0,
+		              "y": 0,
+		              "height": 160,
+		              "width": 161
+		            }
+		          },
+		          "smallImage": {
+		            "rect": {
+		              "x": 70,
+		              "y": 71,
+		              "height": 72,
+		              "width": 73
+		            },
+		            "sheetPath": "images/weirdCasesSet01_HighSmall.jpg",
+		            "sheetSize": {
+		              "x": 0,
+		              "y": 0,
+		              "height": 162,
+		              "width": 163
+		            }
+		          }
+		        },
+		        "pageCollection": [
+		          {
+		            "pageId": "3.1",
+		            "pageName": "weird_cases_pages",
+		            "normalResolution": {
+		              "image": {
+		                "rect": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 74,
+		                  "width": 75
+		                },
+		                "sheetPath": "images/weirdCasesPageSet01_Normal.jpg",
+		                "sheetSize": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 164,
+		                  "width": 165
+		                }
+		              },
+		              "smallImage": {
+		                "rect": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 76,
+		                  "width": 77
+		                },
+		                "sheetPath": "images/weirdCasesPageSet01_NormalSmall.jpg",
+		                "sheetSize": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 166,
+		                  "width": 167
+		                }
+		              }
+		            },
+		            "highResolution": {
+		              "image": {
+		                "rect": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 78,
+		                  "width": 79
+		                },
+		                "sheetPath": "images/weirdCasesPageSet01_High.jpg",
+		                "sheetSize": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 168,
+		                  "width": 169
+		                }
+		              },
+		              "smallImage": {
+		                "rect": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 80,
+		                  "width": 81
+		                },
+		                "sheetPath": "images/weirdCasesPageSet01_HighSmall.jpg",
+		                "sheetSize": {
+		                  "x": 0,
+		                  "y": 0,
+		                  "height": 170,
+		                  "width": 171
+		                }
+		              }
+		            },
+		            "cardCollection": [
+		              {
+		                "cardId": 6,
+		                "cardName": "card_without_intro",
+		                "cardDescription": "card_without_intro_description",
+		                "unlockHowToText": "Unlock this card by playing Destiny.",
+		                "rarity": 1,
+		                "unlockFlagHash": 0,
+		                "points": 0,
+		                "normalResolution": {
+		                  "image": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 92,
+		                      "width": 93
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_Normal.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 172,
+		                      "width": 173
+		                    }
+		                  },
+		                  "smallImage": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 94,
+		                      "width": 95
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_NormalSmall.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 174,
+		                      "width": 175
+		                    }
+		                  }
+		                },
+		                "highResolution": {
+		                  "image": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 96,
+		                      "width": 97
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_High.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 176,
+		                      "width": 177
+		                    }
+		                  },
+		                  "smallImage": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 98,
+		                      "width": 99
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_HighSmall.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 178,
+		                      "width": 179
+		                    }
+		                  }
+		                }
+		              }
+		            ]
+		          }
+		        ]
 		      }
 		    ]
 		  },
@@ -797,7 +1010,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 
 	grimoireDefinition = grimoireebook.getDestinyGrimoireDefinitionFromJson(json.loads(testGrimoire, encoding='utf8'))
 
-	assert len(grimoireDefinition["themes"]) == 2
+	assert len(grimoireDefinition["themes"]) == 3
 	assert grimoireDefinition["themes"][0]["themeName"] == "theme_1"
 	assert len(grimoireDefinition["themes"][0]["pages"]) == 2
 	assert grimoireDefinition["themes"][0]["pages"][0]["pageName"] == "page_1.1"
@@ -848,6 +1061,20 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionYStart"] == 0
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionHeight"] == 86
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionWidth"] == 87
+	assert grimoireDefinition["themes"][2]["themeName"] == "weird_cases_theme"
+	assert len(grimoireDefinition["themes"][2]["pages"]) == 1
+	assert grimoireDefinition["themes"][2]["pages"][0]["pageName"] == "weird_cases_pages"
+	assert len(grimoireDefinition["themes"][2]["pages"][0]["cards"]) == 1
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardName"] == "card_without_intro"
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardIntro"] == ""
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardDescription"] == "card_without_intro_description"
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["sourceImage"] == "http://www.bungie.net/images/weirdCasesCardSet01_High.jpg"
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionXStart"] == 0
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionYStart"] == 0
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionHeight"] == 96
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionWidth"] == 97
+
+
 
 @mock.patch('os.makedirs')
 @mock.patch('urllib.urlretrieve')

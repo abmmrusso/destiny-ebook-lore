@@ -74,7 +74,7 @@ def getDestinyGrimoireDefinitionFromJson(grimoireJson):
 				logging.debug('Processing grimoire card: %s' % card)
 				pageToAdd["cards"].append(
 					{ "cardName" : card["cardName"], 
-					"cardIntro" : card["cardIntro"], 
+					"cardIntro" : card.get("cardIntro", u""),
 					"cardDescription" : card["cardDescription"],
 					"image": { "sourceImage" : "http://www.bungie.net/" + card["highResolution"]["image"]["sheetPath"],
 								"regionXStart" : card["highResolution"]["image"]["rect"]["x"],
