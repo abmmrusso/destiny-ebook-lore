@@ -100,7 +100,6 @@ def generateCardImageFromImageSheet(cardName, sheetImagePath, localImageFolder, 
 	generatedImagePath = os.path.join(localImageFolder, '%s%s' % (cardName, os.path.splitext(sheetImagePath)[1]))
 
 	sheetImage = Image.open(sheetImagePath)
-	print (sheetImage)
 	cardImage = sheetImage.crop((dimensions_tuple[0], dimensions_tuple[1], dimensions_tuple[0] + dimensions_tuple[2], dimensions_tuple[1] + dimensions_tuple[3]))
 	cardImage.save(generatedImagePath, optimize=True)
 

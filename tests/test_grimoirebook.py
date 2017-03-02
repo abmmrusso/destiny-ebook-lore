@@ -10,7 +10,7 @@ from grimoireebook import DestinyContentAPIClientError
 from ebooklib import epub
 from mock import call
 
-__dummyGrimoireDefinition__ = {"themes": [] }
+__dummyGrimoireDefinition__ = {'themes': [] }
 __testApiKey__ = 'testApiKey'
 
 @mock.patch('grimoireebook.loadDestinyGrimoireDefinition', autospec = True)
@@ -52,11 +52,9 @@ def test_grimoireRetrievalFromBungieShouldTriggerExceptionIfNoAPIKeyIsGiven():
 def test_shouldRetrieveGrimoireDataFromBungie():
 	httpretty.register_uri(httpretty.GET, 
 					'http://www.bungie.net/Platform/Destiny/Vanguard/Grimoire/Definition/', 
-					body=json.dumps(__dummyGrimoireDefinition__),
+					body=json.dumps(__dummyGrimoireDefinition__, ensure_ascii=False, encoding='utf8'),
 					content_type='application/json',
 					status=200)
-
-
 	retrievedGrimoire = grimoireebook.getDestinyGrimoireFromBungie(__testApiKey__)
 
 	assert httpretty.last_request().headers['X-API-Key'] == __testApiKey__
@@ -797,7 +795,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 		}
 	'''
 
-	grimoireDefinition = grimoireebook.getDestinyGrimoireDefinitionFromJson(json.loads(testGrimoire))
+	grimoireDefinition = grimoireebook.getDestinyGrimoireDefinitionFromJson(json.loads(testGrimoire, encoding='utf8'))
 
 	assert len(grimoireDefinition["themes"]) == 2
 	assert grimoireDefinition["themes"][0]["themeName"] == "theme_1"

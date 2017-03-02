@@ -4,7 +4,7 @@ from setuptools.command.test import test as TestCommand
 class PyTest(TestCommand):
     def initialize_options(self):
 	TestCommand.initialize_options(self)
-	self.test_args = []
+	self.test_args = ['--junitxml', './tests/testreport.xml']
 
     def run_tests(self):
         import pytest

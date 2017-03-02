@@ -63,3 +63,5 @@ target/
 
 #Mac OS X
 .DS_Store
+
+testreport.xml
