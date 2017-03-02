@@ -75,7 +75,7 @@ def getDestinyGrimoireDefinitionFromJson(grimoireJson):
 				pageToAdd["cards"].append(
 					{ "cardName" : card["cardName"], 
 					"cardIntro" : card.get("cardIntro", u""),
-					"cardDescription" : card["cardDescription"],
+					"cardDescription" : card.get("cardDescription", u""),
 					"image": { "sourceImage" : "http://www.bungie.net/" + card["highResolution"]["image"]["sheetPath"],
 								"regionXStart" : card["highResolution"]["image"]["rect"]["x"],
 								"regionYStart" : card["highResolution"]["image"]["rect"]["y"],

@@ -993,6 +993,79 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 		                    }
 		                  }
 		                }
+		              },
+		              {
+		                "cardId": 7,
+		                "cardName": "card_without_description",
+		                "cardIntro": "card_without_description_intro",
+		                "unlockHowToText": "Unlock this card by playing Destiny.",
+		                "rarity": 1,
+		                "unlockFlagHash": 0,
+		                "points": 0,
+		                "normalResolution": {
+		                  "image": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 102,
+		                      "width": 103
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_Normal.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 172,
+		                      "width": 173
+		                    }
+		                  },
+		                  "smallImage": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 104,
+		                      "width": 105
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_NormalSmall.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 174,
+		                      "width": 175
+		                    }
+		                  }
+		                },
+		                "highResolution": {
+		                  "image": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 106,
+		                      "width": 107
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_High.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 176,
+		                      "width": 177
+		                    }
+		                  },
+		                  "smallImage": {
+		                    "rect": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 108,
+		                      "width": 109
+		                    },
+		                    "sheetPath": "images/weirdCasesCardSet01_HighSmall.jpg",
+		                    "sheetSize": {
+		                      "x": 0,
+		                      "y": 0,
+		                      "height": 178,
+		                      "width": 179
+		                    }
+		                  }
+		                }
 		              }
 		            ]
 		          }
@@ -1064,7 +1137,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][2]["themeName"] == "weird_cases_theme"
 	assert len(grimoireDefinition["themes"][2]["pages"]) == 1
 	assert grimoireDefinition["themes"][2]["pages"][0]["pageName"] == "weird_cases_pages"
-	assert len(grimoireDefinition["themes"][2]["pages"][0]["cards"]) == 1
+	assert len(grimoireDefinition["themes"][2]["pages"][0]["cards"]) == 2
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardName"] == "card_without_intro"
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardIntro"] == ""
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardDescription"] == "card_without_intro_description"
@@ -1073,6 +1146,14 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionYStart"] == 0
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionHeight"] == 96
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionWidth"] == 97
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["cardName"] == "card_without_description"
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["cardIntro"] == "card_without_description_intro"
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["cardDescription"] == ""
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["sourceImage"] == "http://www.bungie.net/images/weirdCasesCardSet01_High.jpg"
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionXStart"] == 0
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionYStart"] == 0
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionHeight"] == 106
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionWidth"] == 107
 
 
 
