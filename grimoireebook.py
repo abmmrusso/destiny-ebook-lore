@@ -34,7 +34,7 @@ DEFAULT_PAGE_STYLE = '''
 	}
 '''
 
-DEFAULT_IMAGE_FOLDER = 'images'
+DEFAULT_IMAGE_FOLDER = '~/destinyLore/cache/images'
 
 def generateGrimoireEbook(apiKey):
 	createGrimoireEpub(loadDestinyGrimoireDefinition(apiKey))
@@ -51,6 +51,7 @@ def createGrimoireEpub(destinyGrimoireDefinition, book=epub.EpubBook()):
 
 	book.add_item(epub.EpubItem(uid="style_default", file_name="style/default.css", media_type="text/css", content=DEFAULT_PAGE_STYLE))
 
+	dowloadGrimoireImages(destinyGrimoireDefinition)
 	addThemeSetsToEbook(book, destinyGrimoireDefinition)
 
 	book.add_item(epub.EpubNcx())
@@ -86,15 +87,16 @@ def getDestinyGrimoireDefinitionFromJson(grimoireJson):
 		
 	return grimoireDefinition
 
-def dowloadGrimoireImages(grimoireDefinition, localImageFolder):
-	jsonpath_expr = jsonpath_rw.parse('themes[*].pages[*].cards[*].image')
+def dowloadGrimoireImages(grimoireDefinition):
+	logging.info('Dowloading Grimoire images')
+	jsonpath_expr = jsonpath_rw.parse('themes[*].pages[*].cards[*].image.sourceImage')
 
 	imagesToDownload = Set([match.value for match in jsonpath_expr.find(grimoireDefinition)])
 
-	os.makedirs(localImageFolder)
+	os.makedirs(DEFAULT_IMAGE_FOLDER)
 
 	for imageURL in imagesToDownload:
-		urllib.urlretrieve(imageURL, os.path.join(localImageFolder, urlparse.urlsplit(imageURL).path.split('/')[-1]))
+		urllib.urlretrieve(imageURL, os.path.join(DEFAULT_IMAGE_FOLDER, urlparse.urlsplit(imageURL).path.split('/')[-1]))
 
 def generateCardImageFromImageSheet(cardName, sheetImagePath, localImageFolder, dimensions_tuple):
 	generatedImagePath = os.path.join(localImageFolder, '%s%s' % (cardName, os.path.splitext(sheetImagePath)[1]))

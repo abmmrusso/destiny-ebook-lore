@@ -1160,7 +1160,6 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 @mock.patch('os.makedirs')
 @mock.patch('urllib.urlretrieve')
 def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedirs):
-	localImageFolder = '~/destinyGrimoire/images'
 	testGrimoireDefinition = dict()
 	testGrimoireDefinition["themes"] = []
 	testGrimoireDefinition["themes"].append(dict())
@@ -1168,58 +1167,58 @@ def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedir
 	testGrimoireDefinition["themes"][0]["pages"].append(dict())
 	testGrimoireDefinition["themes"][0]["pages"][0]["cards"] = []
 	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet01_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][0]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet01_High.jpg")
 	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet01_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][1]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet01_High.jpg")
 	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet02_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][2]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet02_High.jpg")
 	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet02_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][3]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet02_High.jpg")
 	testGrimoireDefinition["themes"][0]["pages"].append(dict())
 	testGrimoireDefinition["themes"][0]["pages"][1]["cards"] = []
 	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet03_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][0]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet03_High.jpg")
 	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet03_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][1]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet03_High.jpg")
 	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet04_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][2]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet04_High.jpg")
 	testGrimoireDefinition["themes"][0]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet04_High.jpg"
+	testGrimoireDefinition["themes"][0]["pages"][1]["cards"][3]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet04_High.jpg")
 	testGrimoireDefinition["themes"].append(dict())
 	testGrimoireDefinition["themes"][1]["pages"] = []
 	testGrimoireDefinition["themes"][1]["pages"].append(dict())
 	testGrimoireDefinition["themes"][1]["pages"][0]["cards"] = []
 	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet05_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet05_High.jpg")
 	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet05_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][1]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet05_High.jpg")
 	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet06_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][2]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet06_High.jpg")
 	testGrimoireDefinition["themes"][1]["pages"][0]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet06_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][0]["cards"][3]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet06_High.jpg")
 	testGrimoireDefinition["themes"][1]["pages"].append(dict())
 	testGrimoireDefinition["themes"][1]["pages"][1]["cards"] = []
 	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][0]["image"] = "http://www.bungie.net/images/cardSet07_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][0]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet07_High.jpg")
 	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][1]["image"] = "http://www.bungie.net/images/cardSet07_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][1]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet07_High.jpg")
 	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][2]["image"] = "http://www.bungie.net/images/cardSet08_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][2]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet08_High.jpg")
 	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
-	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][3]["image"] = "http://www.bungie.net/images/cardSet08_High.jpg"
+	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][3]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet08_High.jpg")
 
-	grimoireebook.dowloadGrimoireImages(testGrimoireDefinition, localImageFolder);
+	grimoireebook.dowloadGrimoireImages(testGrimoireDefinition);
 
-	mock_makedirs.assert_called_once_with(localImageFolder)
+	mock_makedirs.assert_called_once_with(grimoireebook.DEFAULT_IMAGE_FOLDER)
 	assert mock_urllib.call_count == 8
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet01_High.jpg", os.path.join(localImageFolder, "cardSet01_High.jpg"))
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet02_High.jpg", os.path.join(localImageFolder, "cardSet02_High.jpg"))
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet03_High.jpg", os.path.join(localImageFolder, "cardSet03_High.jpg"))
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet04_High.jpg", os.path.join(localImageFolder, "cardSet04_High.jpg"))
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet05_High.jpg", os.path.join(localImageFolder, "cardSet05_High.jpg"))
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet06_High.jpg", os.path.join(localImageFolder, "cardSet06_High.jpg"))
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet07_High.jpg", os.path.join(localImageFolder, "cardSet07_High.jpg"))
-	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet08_High.jpg", os.path.join(localImageFolder, "cardSet08_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet01_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet01_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet02_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet02_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet03_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet03_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet04_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet04_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet05_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet05_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet06_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet06_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet07_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet07_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet08_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet08_High.jpg"))
 
 @mock.patch('grimoireebook.Image.open')
 @mock.patch('grimoireebook.Image')
@@ -1393,7 +1392,8 @@ def test_shouldAddThemesToGrimoireBook(mock_addThemePagesToEbook, mock_ebook):
 
 @mock.patch('ebooklib.epub.EpubBook')
 @mock.patch('grimoireebook.addThemeSetsToEbook')
-def test_shouldCreateGrimoireEpub(mock_addThemeSetsToEbook, mock_ebook):
+@mock.patch('grimoireebook.dowloadGrimoireImages')
+def test_shouldCreateGrimoireEpub(mock_dowloadGrimoireImages, mock_addThemeSetsToEbook, mock_ebook):
 	grimoireDefinition = {}
 	mock_addThemeSetsToEbook.return_value = ()
 
@@ -1406,6 +1406,7 @@ def test_shouldCreateGrimoireEpub(mock_addThemeSetsToEbook, mock_ebook):
 		mock_ebook.add_author.assert_called_with('Bungie')
 		mock_ebook.set_cover.assert_called_with('cover.jpg', "dummyCoverImageData")
 
+		mock_dowloadGrimoireImages.assert_called_once_with(grimoireDefinition)
 		mock_addThemeSetsToEbook.assert_called_once_with(mock_ebook, grimoireDefinition);
 
 		mock_ebook.add_item.assert_has_calls([call(BookStyleItemMatcher()), call(ItemTypeMatcher(epub.EpubNcx)), call(ItemTypeMatcher(epub.EpubNav))], any_order=True)
