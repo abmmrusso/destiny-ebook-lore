@@ -34,7 +34,7 @@ DEFAULT_PAGE_STYLE = '''
 	}
 '''
 
-DEFAULT_IMAGE_FOLDER = '~/destinyLore/cache/images'
+DEFAULT_IMAGE_FOLDER = os.path.join(os.path.expanduser('~'), '.destinyLore/cache/images')
 
 def generateGrimoireEbook(apiKey):
 	createGrimoireEpub(loadDestinyGrimoireDefinition(apiKey))
@@ -96,6 +96,7 @@ def dowloadGrimoireImages(grimoireDefinition):
 	os.makedirs(DEFAULT_IMAGE_FOLDER)
 
 	for imageURL in imagesToDownload:
+		logging.debug("Downloading %s" % imageURL)
 		urllib.urlretrieve(imageURL, os.path.join(DEFAULT_IMAGE_FOLDER, urlparse.urlsplit(imageURL).path.split('/')[-1]))
 
 def generateCardImageFromImageSheet(cardName, sheetImagePath, localImageFolder, dimensions_tuple):
