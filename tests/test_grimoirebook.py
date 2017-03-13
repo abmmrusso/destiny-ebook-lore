@@ -1345,7 +1345,7 @@ def test_shouldAddPageCardsToGrimoireEbook(mock_createGrimoireCardPage, mock_ebo
 	pageCards = grimoireebook.addPageItemsToEbook(mock_ebook, pageData)
 
 	assert pageCards == (firstCardPage, secondCardPage)
-	mock_createGrimoireCardPage.assert_has_calls([mock.call('card1', grimoireebook.DEFAULT_PAGE_STYLE), mock.call('card2', grimoireebook.DEFAULT_PAGE_STYLE)])
+	mock_createGrimoireCardPage.assert_has_calls([mock.call('card1', BookStyleItemMatcher()), mock.call('card2', BookStyleItemMatcher())])
 	mock_ebook.add_item.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])
 	mock_ebook.spine.append.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])
 
