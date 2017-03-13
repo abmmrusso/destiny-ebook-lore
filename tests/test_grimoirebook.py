@@ -1155,11 +1155,10 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionHeight"] == 106
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionWidth"] == 107
 
-
-
+@mock.patch('os.path.exists')
 @mock.patch('os.makedirs')
 @mock.patch('urllib.urlretrieve')
-def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedirs):
+def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedirs, mock_pathExists):
 	testGrimoireDefinition = dict()
 	testGrimoireDefinition["themes"] = []
 	testGrimoireDefinition["themes"].append(dict())
@@ -1207,7 +1206,9 @@ def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedir
 	testGrimoireDefinition["themes"][1]["pages"][1]["cards"].append(dict())
 	testGrimoireDefinition["themes"][1]["pages"][1]["cards"][3]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet08_High.jpg")
 
-	grimoireebook.dowloadGrimoireImages(testGrimoireDefinition);
+	mock_pathExists.return_value = False
+
+	grimoireebook.dowloadGrimoireImages(testGrimoireDefinition)
 
 	mock_makedirs.assert_called_once_with(grimoireebook.DEFAULT_IMAGE_FOLDER)
 	assert mock_urllib.call_count == 8
@@ -1219,6 +1220,30 @@ def test_shouldDownloadAllGrimoireImagesToLocalStorage(mock_urllib, mock_makedir
 	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet06_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet06_High.jpg"))
 	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet07_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet07_High.jpg"))
 	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet08_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet08_High.jpg"))
+
+@mock.patch('os.path.exists')
+@mock.patch('os.makedirs')
+@mock.patch('urllib.urlretrieve')
+def test_shouldNotCreateImageFolderWhenDownloadAllGrimoireImagesToLocalStorageIfItAlreadyExists(mock_urllib, mock_makedirs, mock_pathExists):
+	testGrimoireDefinition = dict()
+	testGrimoireDefinition["themes"] = []
+	testGrimoireDefinition["themes"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"] = []
+	testGrimoireDefinition["themes"][0]["pages"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"] = []
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][0]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet01_High.jpg")
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"].append(dict())
+	testGrimoireDefinition["themes"][0]["pages"][0]["cards"][1]["image"] = dict(sourceImage = "http://www.bungie.net/images/cardSet02_High.jpg")
+
+	mock_pathExists.return_value = True
+
+	grimoireebook.dowloadGrimoireImages(testGrimoireDefinition)
+
+	mock_makedirs.assert_not_called()
+	assert mock_urllib.call_count == 2
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet01_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet01_High.jpg"))
+	mock_urllib.assert_any_call("http://www.bungie.net/images/cardSet02_High.jpg", os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, "cardSet02_High.jpg"))
 
 @mock.patch('grimoireebook.Image.open')
 @mock.patch('grimoireebook.Image')

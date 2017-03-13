@@ -93,7 +93,8 @@ def dowloadGrimoireImages(grimoireDefinition):
 
 	imagesToDownload = Set([match.value for match in jsonpath_expr.find(grimoireDefinition)])
 
-	os.makedirs(DEFAULT_IMAGE_FOLDER)
+	if not os.path.exists(DEFAULT_IMAGE_FOLDER):
+		os.makedirs(DEFAULT_IMAGE_FOLDER)
 
 	for imageURL in imagesToDownload:
 		logging.debug("Downloading %s" % imageURL)
