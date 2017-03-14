@@ -36,6 +36,8 @@ DEFAULT_PAGE_STYLE = '''
 
 DEFAULT_IMAGE_FOLDER = os.path.join(os.path.expanduser('~'), '.destinyLore/cache/images')
 
+DEFAULT_BOOK_FILE = os.path.join(os.path.expanduser('~'), '.destinyLore/destinyGrimoire.epub')
+
 def generateGrimoireEbook(apiKey):
 	createGrimoireEpub(loadDestinyGrimoireDefinition(apiKey))
 
@@ -56,6 +58,8 @@ def createGrimoireEpub(destinyGrimoireDefinition, book=epub.EpubBook()):
 
 	book.add_item(epub.EpubNcx())
 	book.add_item(epub.EpubNav())
+
+	epub.write_epub(DEFAULT_BOOK_FILE, book)
 
 def getDestinyGrimoireFromBungie(apiKey):
 	logging.debug('Dowloading Destiny Grimoire from Bungie')

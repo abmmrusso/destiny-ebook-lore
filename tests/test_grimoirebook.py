@@ -1418,10 +1418,11 @@ def test_shouldAddThemesToGrimoireBook(mock_addThemePagesToEbook, mock_ebook):
 	assert themeSets == ((firstTheme['themeName'], firstThemeSet), (secondTheme['themeName'], secondThemeSet))
 	mock_addThemePagesToEbook.assert_has_calls([mock.call(mock_ebook, firstTheme), mock.call(mock_ebook, secondTheme)])
 
+@mock.patch('ebooklib.epub.write_epub')
 @mock.patch('ebooklib.epub.EpubBook')
 @mock.patch('grimoireebook.addThemeSetsToEbook')
 @mock.patch('grimoireebook.dowloadGrimoireImages')
-def test_shouldCreateGrimoireEpub(mock_dowloadGrimoireImages, mock_addThemeSetsToEbook, mock_ebook):
+def test_shouldCreateGrimoireEpub(mock_dowloadGrimoireImages, mock_addThemeSetsToEbook, mock_ebook, mock_epubWrite):
 	grimoireDefinition = {}
 	mock_addThemeSetsToEbook.return_value = ()
 
@@ -1435,9 +1436,11 @@ def test_shouldCreateGrimoireEpub(mock_dowloadGrimoireImages, mock_addThemeSetsT
 		mock_ebook.set_cover.assert_called_with('cover.jpg', "dummyCoverImageData")
 
 		mock_dowloadGrimoireImages.assert_called_once_with(grimoireDefinition)
-		mock_addThemeSetsToEbook.assert_called_once_with(mock_ebook, grimoireDefinition);
+		mock_addThemeSetsToEbook.assert_called_once_with(mock_ebook, grimoireDefinition)
 
 		mock_ebook.add_item.assert_has_calls([call(BookStyleItemMatcher()), call(ItemTypeMatcher(epub.EpubNcx)), call(ItemTypeMatcher(epub.EpubNav))], any_order=True)
+
+		mock_epubWrite.assert_called_once_with(grimoireebook.DEFAULT_BOOK_FILE, mock_ebook)
 
 class BookStyleItemMatcher:
 	def __eq__(self, other):
