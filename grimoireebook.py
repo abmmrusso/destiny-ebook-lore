@@ -132,10 +132,11 @@ def createGrimoireCardPage(pageData, pageCSS):
 def addPageItemsToEbook(ebook, pageData):
 	pageCards = ()
 	for cardData in pageData['cards']:
-		cardPage = createGrimoireCardPage(cardData, epub.EpubItem(uid="style_default", file_name="style/default.css", media_type="text/css", content=DEFAULT_PAGE_STYLE))
-		ebook.add_item(cardPage)
-		ebook.spine.append(cardPage)
-		pageCards = pageCards + (cardPage,)
+		cardPageData = createGrimoireCardPage(cardData, epub.EpubItem(uid="style_default", file_name="style/default.css", media_type="text/css", content=DEFAULT_PAGE_STYLE))
+		ebook.add_item(cardPageData.page)
+		ebook.add_item(cardPageData.image)
+		ebook.spine.append(cardPageData.page)
+		pageCards = pageCards + (cardPageData.page,)
 	return pageCards
 
 def addThemePagesToEbook(ebook, themeData):

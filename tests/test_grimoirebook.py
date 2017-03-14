@@ -3,6 +3,7 @@ import mock
 import httpretty
 import json
 import grimoireebook
+import collections
 import os
 import string
 from PIL import Image
@@ -1359,9 +1360,11 @@ def test_shouldCreateGrimoireEbookPage(mock_generate_grimoire_page_image):
 @mock.patch('grimoireebook.createGrimoireCardPage')
 def test_shouldAddPageCardsToGrimoireEbook(mock_createGrimoireCardPage, mock_ebook):
 	firstCardPage = mock.Mock()
+	firstCardImage = mock.Mock()
 	secondCardPage = mock.Mock()
+	secondCardImage = mock.Mock()
 
-	mock_createGrimoireCardPage.side_effect = [ firstCardPage, secondCardPage ]
+	mock_createGrimoireCardPage.side_effect = [ collections.namedtuple('GrimoirePage', ['page', 'image'])(page=firstCardPage, image=firstCardImage), collections.namedtuple('GrimoirePage', ['page', 'image'])(page=secondCardPage, image=secondCardImage) ]
 
 	pageData = {
 					'cards' : [ 'card1', 'card2' ]
@@ -1371,7 +1374,7 @@ def test_shouldAddPageCardsToGrimoireEbook(mock_createGrimoireCardPage, mock_ebo
 
 	assert pageCards == (firstCardPage, secondCardPage)
 	mock_createGrimoireCardPage.assert_has_calls([mock.call('card1', BookStyleItemMatcher()), mock.call('card2', BookStyleItemMatcher())])
-	mock_ebook.add_item.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])
+	mock_ebook.add_item.assert_has_calls([mock.call(firstCardPage), mock.call(firstCardImage), mock.call(secondCardPage), mock.call(secondCardImage)])
 	mock_ebook.spine.append.assert_has_calls([mock.call(firstCardPage), mock.call(secondCardPage)])
 
 @mock.patch('ebooklib.epub.EpubBook')
