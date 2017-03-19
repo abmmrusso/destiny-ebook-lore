@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import requests
 import urlparse
 import jsonpath_rw
