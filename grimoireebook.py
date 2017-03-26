@@ -8,6 +8,7 @@ import os
 import collections
 import sys
 import logging
+import re
 from PIL import Image
 from sets import Set
 from ebooklib import epub
@@ -105,8 +106,8 @@ def dowloadGrimoireImages(grimoireDefinition):
 		logging.debug("Downloading %s" % imageURL)
 		urllib.urlretrieve(imageURL, os.path.join(DEFAULT_IMAGE_FOLDER, urlparse.urlsplit(imageURL).path.split('/')[-1]))
 
-def generateCardImageFromImageSheet(cardName, sheetImagePath, localImageFolder, dimensions_tuple):
-	generatedImagePath = os.path.join(localImageFolder, '%s%s' % (cardName, os.path.splitext(sheetImagePath)[1]))
+def generateCardImageFromImageSheet(imageBaseFileName, sheetImagePath, localImageFolder, dimensions_tuple):
+	generatedImagePath = os.path.join(localImageFolder, '%s%s' % (imageBaseFileName, os.path.splitext(sheetImagePath)[1]))
 
 	sheetImage = Image.open(sheetImagePath)
 	cardImage = sheetImage.crop((dimensions_tuple[0], dimensions_tuple[1], dimensions_tuple[0] + dimensions_tuple[2], dimensions_tuple[1] + dimensions_tuple[3]))
@@ -128,9 +129,10 @@ def generateGrimoirePageImage(imageName, imageData, imagesFolder):
 	return epub.EpubItem(uid=imageBaseFileName, file_name=imagePath, content=open(imagePath, 'rb').read())
 
 def createGrimoireCardPage(pageData, pageCSS):
-	bookPage = epub.EpubHtml(title=pageData["cardName"], file_name='%s.%s' % (pageData["cardName"], 'xhtml'), lang='en', content="")
+	fileName = re.sub(r"[^\d\w]","_", pageData["cardName"])
+	bookPage = epub.EpubHtml(title=pageData["cardName"], file_name='%s.%s' % (fileName, 'xhtml'), lang='en', content="")
 	bookPage.add_item(pageCSS)
-	pageImage = generateGrimoirePageImage(pageData["cardName"], pageData["image"], DEFAULT_IMAGE_FOLDER)
+	pageImage = generateGrimoirePageImage(fileName, pageData["image"], DEFAULT_IMAGE_FOLDER)
 	bookPage.content = generateGrimoirePageContent(pageData, pageImage.file_name)
 	return collections.namedtuple('GrimoirePage', ['page', 'image'])(page=bookPage, image=pageImage)
 

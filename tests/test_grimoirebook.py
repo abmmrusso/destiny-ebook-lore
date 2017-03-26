@@ -1321,7 +1321,13 @@ def test_shouldGenerateEpubImageItem(mock_card_image_gen):
 
 @mock.patch('grimoireebook.generateGrimoirePageImage')
 def test_shouldCreateGrimoireEbookPage(mock_generate_grimoire_page_image):
-	cardName = "NameText"
+	runCreateGrimoireEbookPageTest('NameText', 'NameText', mock_generate_grimoire_page_image)
+
+@mock.patch('grimoireebook.generateGrimoirePageImage')
+def test_shouldReplaceWhitespaceCharactersInFilenamesWhenCreatingGrimoireEbookPage(mock_generate_grimoire_page_image):
+	runCreateGrimoireEbookPageTest('Name \tText', 'Name__Text', mock_generate_grimoire_page_image)
+
+def runCreateGrimoireEbookPageTest(cardName, cardFilename, mock_generate_grimoire_page_image):
 	cardImage = "%s_img.jpg" % (cardName)
 	cardImagePath = os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, cardImage)
 
@@ -1346,12 +1352,12 @@ def test_shouldCreateGrimoireEbookPage(mock_generate_grimoire_page_image):
 	createdPageItems = grimoireebook.createGrimoireCardPage(cardData, default_css)
 
 	assert createdPageItems.page.title == cardName
-	assert createdPageItems.page.file_name == '%s.xhtml' % (cardName)
+	assert createdPageItems.page.file_name == '%s.xhtml' % (cardFilename)
 	assert createdPageItems.page.lang == 'en'
 	assert createdPageItems.page.content == grimoireebook.generateGrimoirePageContent(cardData, cardImagePath)
 	assert createdPageItems.image == mock_grimoire_page_image
 
-	mock_generate_grimoire_page_image.assert_called_with(cardName, cardData['image'], grimoireebook.DEFAULT_IMAGE_FOLDER)
+	mock_generate_grimoire_page_image.assert_called_with(cardFilename, cardData['image'], grimoireebook.DEFAULT_IMAGE_FOLDER)
 
 	pageStyle = createdPageItems.page.get_links_of_type("text/css").next()
 	assert pageStyle['href'] == 'style/page.css'
