@@ -126,7 +126,8 @@ def generateGrimoirePageContent(pageData, pageImagePath):
 def generateGrimoirePageImage(imageName, imageData, imagesFolder):
 	imageBaseFileName = '%s_img' % (imageName)
 	imagePath = generateCardImageFromImageSheet(imageBaseFileName, os.path.join(imagesFolder, os.path.basename(imageData["sourceImage"])),imagesFolder, (imageData["regionXStart"], imageData["regionYStart"], imageData["regionWidth"], imageData["regionHeight"]))
-	return epub.EpubItem(uid=imageBaseFileName, file_name=imagePath, content=open(imagePath, 'rb').read())
+	epubImageFile = os.path.join('images', os.path.basename(imagePath))
+	return epub.EpubItem(uid=imageBaseFileName, file_name=epubImageFile, content=open(imagePath, 'rb').read())
 
 def createGrimoireCardPage(pageData, pageCSS):
 	fileName = re.sub(r"[^\d\w]","_", pageData["cardName"])

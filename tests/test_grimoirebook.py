@@ -1299,7 +1299,7 @@ def test_shouldGenerateEpubImageItem(mock_card_image_gen):
 		cardName = "test"
 		cardImageBaseName = '%s_img' % (cardName)
 		cardImageFolder = "images"
-		generatedCardImagePath = "%s/%s.jpg" % (cardImageFolder, cardImageBaseName)
+		generatedCardImagePath = ".destinyCache/cache/%s/%s.jpg" % (cardImageFolder, cardImageBaseName)
 		sheetImagePath = "images/cardSet.jpg"
 		cardImageData = {
 							'sourceImage': 'http://www.bungie.net/images/cardSet.jpg',
@@ -1314,7 +1314,7 @@ def test_shouldGenerateEpubImageItem(mock_card_image_gen):
 		epubImageItem = grimoireebook.generateGrimoirePageImage(cardName, cardImageData, cardImageFolder)
 
 		assert epubImageItem.id == cardImageBaseName
-		assert epubImageItem.file_name == generatedCardImagePath
+		assert epubImageItem.file_name == os.path.join('images','%s_img.jpg' % (cardName))
 		assert epubImageItem.content == testImageData
 
 		mock_card_image_gen.assert_called_with(cardImageBaseName, sheetImagePath, cardImageFolder, (0,0,31,30))
