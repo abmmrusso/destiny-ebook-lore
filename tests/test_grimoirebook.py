@@ -6,6 +6,7 @@ import grimoireebook
 import collections
 import os
 import string
+import hashlib
 from PIL import Image
 from grimoireebook import DestinyContentAPIClientError
 from ebooklib import epub
@@ -60,6 +61,9 @@ def test_shouldRetrieveGrimoireDataFromBungie():
 
 	assert httpretty.last_request().headers['X-API-Key'] == __testApiKey__
 	assert retrievedGrimoire == __dummyGrimoireDefinition__
+
+def generateExpectedCardHash(themeName, pageName, cardName):
+	return hashlib.sha1('%s.%s.%s' % (themeName, pageName, cardName)).hexdigest()
 
 def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	testGrimoire = '''
@@ -1092,6 +1096,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][0]["cardName"] == "card_1.1.1"
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][0]["cardIntro"] == "cardIntro_1.1.1"
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][0]["cardDescription"] == "cardDescription_1.1.1"
+	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][0]["hash"] == generateExpectedCardHash("theme_1","page_1.1", "card_1.1.1")
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][0]["image"]["sourceImage"] == "http://www.bungie.net/images/cardSet01_High.jpg"
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][0]["image"]["regionXStart"] == 0
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][0]["image"]["regionYStart"] == 0
@@ -1100,6 +1105,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][1]["cardName"] == "card_1.1.2"
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][1]["cardIntro"] == "cardIntro_1.1.2"
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][1]["cardDescription"] == "cardDescription_1.1.2"
+	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][1]["hash"] == generateExpectedCardHash("theme_1","page_1.1", "card_1.1.2")
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][1]["image"]["sourceImage"] == "http://www.bungie.net/images/cardSet01_High.jpg"
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][1]["image"]["regionXStart"] == 36
 	assert grimoireDefinition["themes"][0]["pages"][0]["cards"][1]["image"]["regionYStart"] == 37
@@ -1110,6 +1116,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][0]["cardName"] == "card_1.2.1"
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][0]["cardIntro"] == "cardIntro_1.2.1"
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][0]["cardDescription"] == "cardDescription_1.2.1"
+	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][0]["hash"] == generateExpectedCardHash("theme_1","page_1.2", "card_1.2.1")
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][0]["image"]["sourceImage"] == "http://www.bungie.net/images/cardSet02_High.jpg"
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][0]["image"]["regionXStart"] == 0
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][0]["image"]["regionYStart"] == 0
@@ -1118,6 +1125,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][1]["cardName"] == "card_1.2.2"
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][1]["cardIntro"] == "cardIntro_1.2.2"
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][1]["cardDescription"] == "cardDescription_1.2.2"
+	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][1]["hash"] == generateExpectedCardHash("theme_1","page_1.2", "card_1.2.2")
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][1]["image"]["sourceImage"] == "http://www.bungie.net/images/cardSet02_High.jpg"
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][1]["image"]["regionXStart"] == 60
 	assert grimoireDefinition["themes"][0]["pages"][1]["cards"][1]["image"]["regionYStart"] == 61
@@ -1130,6 +1138,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["cardName"] == "card_2.1.1"
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["cardIntro"] == "cardIntro_2.1.1"
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["cardDescription"] == "cardDescription_2.1.1"
+	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["hash"] == generateExpectedCardHash("theme_2","page_2.1", "card_2.1.1")
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["sourceImage"] == "http://www.bungie.net/images/cardSet03_High.jpg"
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionXStart"] == 0
 	assert grimoireDefinition["themes"][1]["pages"][0]["cards"][0]["image"]["regionYStart"] == 0
@@ -1142,6 +1151,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardName"] == "card_without_intro"
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardIntro"] == ""
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["cardDescription"] == "card_without_intro_description"
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["hash"] == generateExpectedCardHash("weird_cases_theme","weird_cases_pages", "card_without_intro")
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["sourceImage"] == "http://www.bungie.net/images/weirdCasesCardSet01_High.jpg"
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionXStart"] == 0
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][0]["image"]["regionYStart"] == 0
@@ -1150,6 +1160,7 @@ def test_shouldExtractDestinyGrimoireDefinitionFromJsonData():
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["cardName"] == "card_without_description"
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["cardIntro"] == "card_without_description_intro"
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["cardDescription"] == ""
+	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["hash"] == generateExpectedCardHash("weird_cases_theme","weird_cases_pages", "card_without_description")
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["sourceImage"] == "http://www.bungie.net/images/weirdCasesCardSet01_High.jpg"
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionXStart"] == 0
 	assert grimoireDefinition["themes"][2]["pages"][0]["cards"][1]["image"]["regionYStart"] == 0
@@ -1330,11 +1341,13 @@ def test_shouldReplaceWhitespaceCharactersInFilenamesWhenCreatingGrimoireEbookPa
 def runCreateGrimoireEbookPageTest(cardName, cardFilename, mock_generate_grimoire_page_image):
 	cardImage = "%s_img.jpg" % (cardName)
 	cardImagePath = os.path.join(grimoireebook.DEFAULT_IMAGE_FOLDER, cardImage)
+	cardHash = '12345678890abcdef'
 
 	cardData = {
 					'cardName': cardName,
 					'cardIntro': 'IntroText',
 					'cardDescription': 'DescriptionText',
+					'hash': cardHash,
 					'image': {
 						'sourceImage': 'http://www.bungie.net/images/cardSet.jpg',
 						'regionXStart': 0,
@@ -1351,13 +1364,14 @@ def runCreateGrimoireEbookPageTest(cardName, cardFilename, mock_generate_grimoir
 
 	createdPageItems = grimoireebook.createGrimoireCardPage(cardData, default_css)
 
+	expectedCardFilename = '%s-%s' % (cardHash, cardFilename)
 	assert createdPageItems.page.title == cardName
-	assert createdPageItems.page.file_name == '%s.xhtml' % (cardFilename)
+	assert createdPageItems.page.file_name == '%s.xhtml' % (expectedCardFilename)
 	assert createdPageItems.page.lang == 'en'
 	assert createdPageItems.page.content == grimoireebook.generateGrimoirePageContent(cardData, cardImagePath)
 	assert createdPageItems.image == mock_grimoire_page_image
 
-	mock_generate_grimoire_page_image.assert_called_with(cardFilename, cardData['image'], grimoireebook.DEFAULT_IMAGE_FOLDER)
+	mock_generate_grimoire_page_image.assert_called_with(expectedCardFilename, cardData['image'], grimoireebook.DEFAULT_IMAGE_FOLDER)
 
 	pageStyle = createdPageItems.page.get_links_of_type("text/css").next()
 	assert pageStyle['href'] == 'style/page.css'

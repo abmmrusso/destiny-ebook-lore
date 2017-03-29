@@ -9,6 +9,7 @@ import collections
 import sys
 import logging
 import re
+import hashlib
 from PIL import Image
 from sets import Set
 from ebooklib import epub
@@ -78,11 +79,12 @@ def getDestinyGrimoireDefinitionFromJson(grimoireJson):
 		for page in theme["pageCollection"]:
 			pageToAdd = { "pageName" : page["pageName"], "cards" : [] }
 			for card in page["cardCollection"]:
-				logging.debug('Processing grimoire card: %s' % card)
+				logging.debug('Processing grimoire card data: %s' % card)
 				pageToAdd["cards"].append(
 					{ "cardName" : card["cardName"], 
 					"cardIntro" : card.get("cardIntro", u""),
 					"cardDescription" : card.get("cardDescription", u""),
+					"hash": hashlib.sha1('%s.%s.%s' % (theme["themeName"], page["pageName"], card["cardName"])).hexdigest(),
 					"image": { "sourceImage" : "http://www.bungie.net/" + card["highResolution"]["image"]["sheetPath"],
 								"regionXStart" : card["highResolution"]["image"]["rect"]["x"],
 								"regionYStart" : card["highResolution"]["image"]["rect"]["y"],
@@ -123,18 +125,18 @@ def generateGrimoirePageContent(pageData, pageImagePath):
 				<carddescription">%s</carddescription>
 			   </container>''' % ( pageData["cardName"], pageData["cardIntro"], pageImagePath, pageData["cardDescription"] )
 
-def generateGrimoirePageImage(imageName, imageData, imagesFolder):
-	imageBaseFileName = '%s_img' % (imageName)
+def generateGrimoirePageImage(cardFileName, imageData, imagesFolder):
+	imageBaseFileName = '%s_img' % (cardFileName)
 	imagePath = generateCardImageFromImageSheet(imageBaseFileName, os.path.join(imagesFolder, os.path.basename(imageData["sourceImage"])),imagesFolder, (imageData["regionXStart"], imageData["regionYStart"], imageData["regionWidth"], imageData["regionHeight"]))
 	epubImageFile = os.path.join('images', os.path.basename(imagePath))
 	return epub.EpubItem(uid=imageBaseFileName, file_name=epubImageFile, content=open(imagePath, 'rb').read())
 
-def createGrimoireCardPage(pageData, pageCSS):
-	fileName = re.sub(r"[^\d\w]","_", pageData["cardName"])
-	bookPage = epub.EpubHtml(title=pageData["cardName"], file_name='%s.%s' % (fileName, 'xhtml'), lang='en', content="")
-	bookPage.add_item(pageCSS)
-	pageImage = generateGrimoirePageImage(fileName, pageData["image"], DEFAULT_IMAGE_FOLDER)
-	bookPage.content = generateGrimoirePageContent(pageData, pageImage.file_name)
+def createGrimoireCardPage(cardData, bookPageCSS):
+	fileName = '%s-%s' % (cardData["hash"], re.sub(r"[^\d\w]","_", cardData["cardName"]))
+	bookPage = epub.EpubHtml(title=cardData["cardName"], file_name='%s.%s' % (fileName, 'xhtml'), lang='en', content="")
+	bookPage.add_item(bookPageCSS)
+	pageImage = generateGrimoirePageImage(fileName, cardData["image"], DEFAULT_IMAGE_FOLDER)
+	bookPage.content = generateGrimoirePageContent(cardData, pageImage.file_name)
 	return collections.namedtuple('GrimoirePage', ['page', 'image'])(page=bookPage, image=pageImage)
 
 def addPageItemsToEbook(ebook, pageData):
