@@ -1415,7 +1415,13 @@ def test_shouldAddThemePagesToGrimoireEbook(mock_addPageItemsToEbook, mock_ebook
 
 	themePages = grimoireebook.addThemePagesToEbook(mock_ebook, themeData)
 
-	assert themePages == ((firstPage['pageName'], firstPageSet), (secondPage['pageName'], secondPageSet))
+	assert type(themePages[0][0]) is epub.Section
+	assert themePages[0][0].title == firstPage['pageName']
+	assert themePages[0][1] == firstPageSet
+	assert type(themePages[1][0]) is epub.Section
+	assert themePages[1][0].title == secondPage['pageName']
+	assert themePages[1][1] == secondPageSet
+
 	mock_addPageItemsToEbook.assert_has_calls([mock.call(mock_ebook, firstPage), mock.call(mock_ebook, secondPage)])
 
 @mock.patch('ebooklib.epub.EpubBook')
@@ -1435,7 +1441,13 @@ def test_shouldAddThemesToGrimoireBook(mock_addThemePagesToEbook, mock_ebook):
 
 	themeSets = grimoireebook.addThemeSetsToEbook(mock_ebook, grimoireData)
 
-	assert themeSets == ((firstTheme['themeName'], firstThemeSet), (secondTheme['themeName'], secondThemeSet))
+	assert type(themeSets[0][0]) is epub.Section
+	assert themeSets[0][0].title == firstTheme['themeName']
+	assert themeSets[0][1] == firstThemeSet
+	assert type(themeSets[1][0]) is epub.Section
+	assert themeSets[1][0].title == secondTheme['themeName']
+	assert themeSets[1][1] == secondThemeSet
+
 	mock_addThemePagesToEbook.assert_has_calls([mock.call(mock_ebook, firstTheme), mock.call(mock_ebook, secondTheme)])
 
 @mock.patch('ebooklib.epub.write_epub')
@@ -1461,6 +1473,8 @@ def test_shouldCreateGrimoireEpub(mock_dowloadGrimoireImages, mock_addThemeSetsT
 		mock_ebook.add_item.assert_has_calls([call(BookStyleItemMatcher()), call(ItemTypeMatcher(epub.EpubNcx)), call(ItemTypeMatcher(epub.EpubNav))], any_order=True)
 
 		mock_epubWrite.assert_called_once_with(grimoireebook.DEFAULT_BOOK_FILE, mock_ebook)
+
+		mock_ebook.toc == mock_addThemeSetsToEbook.return_value
 
 class BookStyleItemMatcher:
 	def __eq__(self, other):

@@ -57,7 +57,7 @@ def createGrimoireEpub(destinyGrimoireDefinition, book=epub.EpubBook()):
 	book.add_item(epub.EpubItem(uid="style_default", file_name="style/default.css", media_type="text/css", content=DEFAULT_PAGE_STYLE))
 
 	dowloadGrimoireImages(destinyGrimoireDefinition)
-	addThemeSetsToEbook(book, destinyGrimoireDefinition)
+	book.toc = addThemeSetsToEbook(book, destinyGrimoireDefinition)
 
 	book.add_item(epub.EpubNcx())
 	book.add_item(epub.EpubNav())
@@ -152,13 +152,13 @@ def addPageItemsToEbook(ebook, pageData):
 def addThemePagesToEbook(ebook, themeData):
 	themePages = ()
 	for pageData in themeData['pages']:
-		themePages = themePages + ((pageData['pageName'], addPageItemsToEbook(ebook, pageData)),)
+		themePages = themePages + ((epub.Section(pageData['pageName']), addPageItemsToEbook(ebook, pageData)),)
 	return themePages
 
 def addThemeSetsToEbook(ebook, grimoireData):
 	themes = ()
 	for themeData in grimoireData['themes']:
-		themes = themes + ((themeData['themeName'], addThemePagesToEbook(ebook, themeData)),)
+		themes = themes + ((epub.Section(themeData['themeName']), addThemePagesToEbook(ebook, themeData)),)
 	return themes
 
 class DestinyContentAPIClientError(Exception):
